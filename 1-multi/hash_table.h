@@ -28,3 +28,6 @@ int put(THashTable *hash_table, char *key, char *value);
 
 // free memory for the hash_table
 void destroy_hash_table(THashTable *hash_table);
+
+// remove the key from the hash table
+void remove_key(THashTable *hash_table, char *key);

@@ -92,6 +92,7 @@ int realloc_hash_table(THashTable *hash_table) {
             free(hash_table->entries[i].value);
         }
     }
+    
     free(hash_table->entries);
     unsigned int old_size = hash_table->size;
     hash_table->size *= 2;
@@ -113,7 +114,7 @@ int realloc_hash_table(THashTable *hash_table) {
 
 int put(THashTable *hash_table, char *key, char *value) {
     // value and key should not be null
-    if (value == NULL || key == NULL)
+    if (key == NULL)
         return -1;
 
     if (hash_table->length >= hash_table->size / 2) {
@@ -123,6 +124,21 @@ int put(THashTable *hash_table, char *key, char *value) {
     }
 
     return put_entry_in_hash_table(hash_table, key, value);
+}
+
+void remove_key(THashTable *hash_table, char *key) {
+    unsigned long long key_hash = hash(key);
+    unsigned int index = key_hash % (hash_table->size - 1);
+    if (hash_table->entries[index].key == NULL)
+        return;
+
+    free(hash_table->entries[index].key);
+    if (hash_table->entries[index].value)
+        free(hash_table->entries[index].value);
+    
+    hash_table->entries[index].key = NULL;
+    hash_table->entries[index].value = NULL;
+    hash_table->length--;   
 }
 
 void destroy_hash_table(THashTable *hash_table) {

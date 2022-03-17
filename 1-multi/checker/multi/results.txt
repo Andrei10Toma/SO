@@ -9,16 +9,22 @@
 05) Test simple file - memcheck.............................passed  [01/95]
 06) Test simple out file....................................passed  [01/95]
 06) Test simple out file - memcheck.........................passed  [01/95]
-_test/outputs/test7.out vs _test/outputs/test7.ref:
---- _test/outputs/test7.out	2022-03-16 14:41:11.608664773 +0200
-+++ _test/outputs/test7.ref	2022-03-16 14:41:11.048664768 +0200
-@@ -1,5 +1,5 @@
- int main() {
--    int y = VAR0 + 1;
--    printf("%d\n", VAR0);
-+    int y = 1 + 1;
-+    printf("%d\n", 1);
-     return 0;
- }
-07) Test simple define......................................failed  [ 0/95]
+07) Test simple define......................................passed  [02/95]
 07) Test simple define - memcheck...........................passed  [01/95]
+08) Test param define.......................................passed  [02/95]
+08) Test param define - memcheck............................passed  [01/95]
+09) Test simple define/undef................................passed  [02/95]
+09) Test simple define/undef - memcheck.....................passed  [01/95]
+_test/outputs/test10.out vs _test/outputs/test10.ref:
+--- _test/outputs/test10.out	2022-03-17 04:03:25.165119874 +0200
++++ _test/outputs/test10.ref	2022-03-17 04:03:23.761119861 +0200
+@@ -1,6 +1,6 @@
+ int main() {
+     printf("%s\n", "10");
+-    int 20 = BCD + 20;
+-    printf("%20\n", 20);
++    int x = 20 + 4 + 20;
++    printf("%x\n", x);
+     return 0;
+10) Test multiple defines...................................failed  [ 0/95]
+10) Test multiple defines - memcheck........................passed  [01/95]
