@@ -87,18 +87,17 @@ void free_entries(unsigned int size, TEntry *entries)
 int realloc_hash_table(THashTable *hash_table)
 {
 	TEntry *old_entries = (TEntry *)calloc(hash_table->size, sizeof(TEntry));
+	TEntry *new_entries = (TEntry *)calloc(hash_table->size * 2, sizeof(TEntry));
+	unsigned int i;
+	unsigned int old_size = hash_table->size;
 
 	if (old_entries == NULL)
 		return -1;
-
-	TEntry *new_entries = (TEntry *)calloc(hash_table->size * 2, sizeof(TEntry));
 
 	if (new_entries == NULL) {
 		free(old_entries);
 		return -1;
 	}
-
-	unsigned int i;
 
 	for (i = 0; i < hash_table->size; i++) {
 		if (hash_table->entries[i].key != NULL) {
@@ -129,7 +128,6 @@ int realloc_hash_table(THashTable *hash_table)
 	}
 
 	free(hash_table->entries);
-	unsigned int old_size = hash_table->size;
 
 	hash_table->size *= 2;
 	hash_table->length = 0;
@@ -151,11 +149,13 @@ int realloc_hash_table(THashTable *hash_table)
 
 int put(THashTable *hash_table, char *key, char *value)
 {
+	int ret_value;
+
 	if (key == NULL)
 		return -1;
 
 	if (hash_table->length >= hash_table->size / 2) {
-		int ret_value = realloc_hash_table(hash_table);
+		ret_value = realloc_hash_table(hash_table);
 
 		if (ret_value == -1)
 			return 12;

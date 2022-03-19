@@ -5,18 +5,19 @@
 char *parse_value(THashTable *hash_table, char *value, int *changed)
 {
 	char *copy_value = (char *)calloc(strlen(value) + 1, sizeof(char));
-
+	char *new_value = NULL;
+	char *token;
+	char *token_value;
+	
 	if (copy_value == NULL)
 		return NULL;
 
-	char *new_value = NULL;
-
 	memcpy(copy_value, value, strlen(value));
 
-	char *token = strtok(copy_value, DELIMITERS);
+	token = strtok(copy_value, DELIMITERS);
 
 	while (token) {
-		char *token_value = get(hash_table, token);
+		token_value = get(hash_table, token);
 
 		if (token_value != NULL) {
 			if (new_value != NULL)
@@ -40,15 +41,16 @@ char *parse_value(THashTable *hash_table, char *value, int *changed)
 int parse_arguments(THashTable *hash_table, FILE **input_file, FILE **output_file, int argc, char *argv[], Vector *include_directories)
 {
 	int i, rc;
+	char *symbol_mapping, *key, *value, *include_directory;
 
 	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], D_ARG, strlen(D_ARG))) {
 			if (argv[i][strlen(D_ARG)] == '\0') {
-				char *symbol_mapping = argv[++i];
+				symbol_mapping = argv[++i];
 
 				if (strchr(symbol_mapping, '=') != NULL) {
-					char *key = strtok(symbol_mapping, "=");
-					char *value = strtok(NULL, "=");
+					key = strtok(symbol_mapping, "=");
+					value = strtok(NULL, "=");
 
 					rc = put(hash_table, key, value);
 					if (rc == 12)
@@ -59,12 +61,12 @@ int parse_arguments(THashTable *hash_table, FILE **input_file, FILE **output_fil
 						return 12;
 				}
 			} else {
-				char *symbol_mapping = argv[i];
+				symbol_mapping = argv[i];
 
 				symbol_mapping += 2;
 				if (strchr(symbol_mapping, '=') != NULL) {
-					char *key = strtok(symbol_mapping, "=");
-					char *value = strtok(NULL, "=");
+					key = strtok(symbol_mapping, "=");
+					value = strtok(NULL, "=");
 
 					rc = put(hash_table, key, value);
 					if (rc == 12)
@@ -77,7 +79,7 @@ int parse_arguments(THashTable *hash_table, FILE **input_file, FILE **output_fil
 			}
 		} else if (!strncmp(argv[i], I_ARG, strlen(I_ARG))) {
 			if (argv[i][strlen(I_ARG)] == '\0') {
-				char *include_directory = argv[++i];
+				include_directory = argv[++i];
 
 				rc = append(include_directories, include_directory);
 				if (rc == 12)
@@ -133,16 +135,18 @@ FILE *get_include_file(char *buffer, Vector *include_directories)
 {
 	unsigned int i;
 	char *file_name = strchr(buffer, ' ');
+	char *file_path;
+	FILE *include_file;
 
 	file_name += 2;
 	memset(file_name + strlen(file_name) - 2, 0, 2);
-	char *file_path = (char *)calloc(strlen(INPUT_DIR) + strlen(file_name) + 1, sizeof(char));
+	file_path = (char *)calloc(strlen(INPUT_DIR) + strlen(file_name) + 1, sizeof(char));
 
 	if (file_path == NULL)
 		return NULL;
 	strcpy(file_path, INPUT_DIR);
 	strcat(file_path, file_name);
-	FILE *include_file = fopen(file_path, "r");
+	include_file = fopen(file_path, "r");
 
 	if (include_file == NULL) {
 		free(file_path);
@@ -172,15 +176,17 @@ int parse_define(char *buffer, char **multi_line_define_key, char **multi_line_d
 {
 	char *key_value_mapping = strchr(buffer, ' ');
 	int rc;
+	int changed = 1;
+	char *key_value_mapping_copy, *key, *value;
 
 	key_value_mapping++;
-	char *key_value_mapping_copy = (char *)calloc(strlen(key_value_mapping), sizeof(char));
+	key_value_mapping_copy = (char *)calloc(strlen(key_value_mapping), sizeof(char));
 
 	if (key_value_mapping_copy == NULL)
 		return 12;
 	memcpy(key_value_mapping_copy, key_value_mapping, strlen(key_value_mapping));
-	char *key = strtok(key_value_mapping_copy, DELIMITERS);
-	char *value = strchr(key_value_mapping, ' ');
+	key = strtok(key_value_mapping_copy, DELIMITERS);
+	value = strchr(key_value_mapping, ' ');
 
 	if (value) {
 		value++;
@@ -201,7 +207,6 @@ int parse_define(char *buffer, char **multi_line_define_key, char **multi_line_d
 			free(key_value_mapping_copy);
 			return 0;
 		}
-		int changed = 1;
 
 		value = parse_value(hash_table, value, &changed);
 		if (!value) {
@@ -228,19 +233,20 @@ int preprocess_line(char *buffer, THashTable *hash_table, FILE *output_file)
 {
 	char *replace_buffer = NULL;
 	char buffer_copy[BUFSIZE];
+	char *token;
+	char *hash_table_value;
+	char *new_replace_buffer;
 
 	memset(buffer_copy, 0, BUFSIZE);
 	memcpy(buffer_copy, buffer, BUFSIZE);
 	// check if something should be changed in the line of code
-	char *token = strtok(buffer_copy, DELIMITERS);
+	token = strtok(buffer_copy, DELIMITERS);
 
 	while (token)  {
-		char *hash_table_value = get(hash_table, token);
+		hash_table_value = get(hash_table, token);
 
 		if (hash_table_value != NULL) {
 			// replace the word in the text
-			char *new_replace_buffer;
-
 			if (replace_buffer == NULL)
 				replace_buffer = replace_string(buffer, token, hash_table_value);
 			else {
@@ -264,16 +270,20 @@ int preprocess_line(char *buffer, THashTable *hash_table, FILE *output_file)
 
 int parse_if_elif_line(char *buffer, int *stop_parsing_if_branch, int *parse_if_branch, int *inside_if_branch, THashTable *hash_table)
 {
+	char *cond;
+	char *cond_value;
+	int eval_cond;
+
 	if (!*stop_parsing_if_branch && !*parse_if_branch) {
-		char *cond = strchr(buffer, ' ');
+		cond = strchr(buffer, ' ');
 
 		cond[strlen(cond) - 1] = '\0';
 		cond++;
-		char *cond_value = get(hash_table, cond);
+		cond_value = get(hash_table, cond);
 
 		if (cond_value != NULL)
 			cond = cond_value;
-		int eval_cond = atoi(cond);
+		eval_cond = atoi(cond);
 
 		*inside_if_branch = 1;
 		*parse_if_branch = eval_cond == 0 ? 0 : 1;
@@ -286,10 +296,12 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 {
 	char buffer[BUFSIZE];
 	int rc;
-	// flags
 	int inside_if_branch = 0, parse_if_branch = 0, stop_parsing_if_branch = 0;
 	char *multi_line_define_key = NULL;
 	char *multi_line_define_value = NULL;
+	char *symbol;
+	char *symbol_value;
+	char *undefined_key;
 
 	memset(buffer, 0, BUFSIZE);
 	while (fgets(buffer, BUFSIZE, input_file)) {
@@ -313,11 +325,11 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 				if (rc == 12)
 					return 12;
 			} else if (!strncmp(buffer, IFDEF, strlen(IFDEF))) {
-				char *symbol = strchr(buffer, ' ');
+				symbol = strchr(buffer, ' ');
 
 				symbol[strlen(symbol) - 1] = '\0';
 				symbol++;
-				char *symbol_value = get(hash_table, symbol);
+				symbol_value = get(hash_table, symbol);
 
 				inside_if_branch = 1;
 				if (symbol_value)
@@ -325,11 +337,11 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 				else
 					parse_if_branch = 0;
 			} else if (!strncmp(buffer, IFNDEF, strlen(IFNDEF))) {
-				char *symbol = strchr(buffer, ' ');
+				symbol = strchr(buffer, ' ');
 
 				symbol[strlen(symbol) - 1] = '\0';
 				symbol++;
-				char *symbol_value = get(hash_table, symbol);
+				symbol_value = get(hash_table, symbol);
 
 				inside_if_branch = 1;
 				if (!symbol_value)
@@ -347,7 +359,7 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 				stop_parsing_if_branch = 0;
 			} else if (!strncmp(buffer, UNDEF, strlen(UNDEF)) && ((inside_if_branch && parse_if_branch) || (!inside_if_branch && !parse_if_branch))) {
 				strtok(buffer, DELIMITERS);
-				char *undefined_key = strtok(NULL, DELIMITERS);
+				undefined_key = strtok(NULL, DELIMITERS);
 
 				remove_key(hash_table, undefined_key);
 			} else if ((inside_if_branch && parse_if_branch) || (!inside_if_branch && !parse_if_branch)) {
@@ -364,25 +376,26 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 
 int main(int argc, char *argv[])
 {
-	THashTable *hash_table = create_hash_table();
+	THashTable *hash_table;
+	Vector *include_directories;
+	char buffer[BUFSIZE];
+	int rc;
+	FILE *input_file = stdin;
+	FILE *output_file = stdout;
+
+	hash_table = create_hash_table();
 
 	if (hash_table == NULL)
 		return 12;
 
-	Vector *include_directories = create_vector(5);
+	include_directories = create_vector(5);
 
 	if (include_directories == NULL) {
 		destroy_hash_table(hash_table);
 		return 12;
 	}
 
-	char buffer[BUFSIZE];
-	int rc;
-
 	memset(buffer, 0, BUFSIZE);
-
-	FILE *input_file = stdin;
-	FILE *output_file = stdout;
 
 	rc = parse_arguments(hash_table, &input_file, &output_file, argc, argv, include_directories);
 
