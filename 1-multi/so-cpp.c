@@ -129,7 +129,8 @@ int parse_multi_line_define(char **multi_line_define_value, char **multi_line_de
 	return 0;
 }
 
-FILE *get_include_file(char *buffer, Vector *include_directories) {
+FILE *get_include_file(char *buffer, Vector *include_directories)
+{
 	unsigned int i;
 	char *file_name = strchr(buffer, ' ');
 
@@ -257,7 +258,7 @@ int preprocess_line(char *buffer, THashTable *hash_table, FILE *output_file)
 		free(replace_buffer);
 	} else
 		fprintf(output_file, "%s", buffer);
-	
+
 	return 0;
 }
 
@@ -300,6 +301,7 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 					return 12;
 			} else if (!strncmp(buffer, INCLUDE, strlen(INCLUDE)) && ((inside_if_branch && parse_if_branch) || (!inside_if_branch && !parse_if_branch))) {
 				FILE *include_file = get_include_file(buffer, include_directories);
+
 				if (include_file == NULL)
 					return 12;
 				rc = preprocess_code(include_file, output_file, hash_table, include_directories);

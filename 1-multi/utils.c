@@ -55,11 +55,12 @@ char *replace_string(char *haystack, char *old_word, char *new_word)
 	return result;
 }
 
-char *my_strdup(char *s) {
+char *my_strdup(char *s)
+{
 	char *s_dup = (char *)calloc(strlen(s) + 1, sizeof(char));
 
 	if (s_dup == NULL)
-		return NULL;		
+		return NULL;
 
 	memcpy(s_dup, s, strlen(s) + 1);
 	return s_dup;
