@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-all: so-cpp
+build: so-cpp
 
 so-cpp: so-cpp.o hash_table.o vector.o utils.o
 	$(CC) $(CFLAGS) $^ -o $@

@@ -1,7 +1,7 @@
 CC = cl
 CFLAGS = /MD
 
-all: so-cpp.exe
+build: so-cpp.exe
 
 so-cpp.exe: so-cpp.obj hash_table.obj vector.obj utils.obj
 	$(CC) /o $@ $** $(CFLAGS)
