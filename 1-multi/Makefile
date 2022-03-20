@@ -4,7 +4,7 @@ CFLAGS = /MD
 all: so-cpp.exe
 
 so-cpp.exe: so-cpp.obj hash_table.obj vector.obj utils.obj
-	$(CC) /o $@ $(CFLAGS) $**
+	$(CC) /o $@ $** $(CFLAGS)
 
 so-cpp.obj: so-cpp.c
 	$(CC) /c $**

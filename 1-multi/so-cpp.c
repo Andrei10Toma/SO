@@ -193,8 +193,10 @@ int parse_define(char *buffer, char **multi_line_define_key, char **multi_line_d
 		value[strlen(value) - 1] = '\0';
 		if (value[strlen(value) - 1] == '\\') {
 			*multi_line_define_key = (char *)calloc(strlen(key) + 1, sizeof(char));
-			if (*multi_line_define_key == NULL)
+			if (*multi_line_define_key == NULL) {
+				free(key_value_mapping_copy);
 				return 12;
+			}
 			*multi_line_define_value = (char *)calloc(strlen(value) + 1, sizeof(char));
 			if (*multi_line_define_value == NULL) {
 				free(*multi_line_define_key);

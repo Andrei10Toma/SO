@@ -190,7 +190,10 @@ test_so_alloc()
 		fi
 
 		run_until_success "realloc"
-
+		if test $? -ne 0; then
+			return
+		fi
+		
 		basic_test compare $out_f $ref_f
 
 		cleanup_test
