@@ -17,7 +17,7 @@ char *replace_string(char *haystack, char *old_word, char *new_word)
 {
 	int length = strlen(haystack);
 	int i, number_of_appearances = 0, between_quotes = 0;
-	char *result = (char *)calloc(1 + strlen(haystack) + number_of_appearances * (strlen(new_word) - strlen(old_word)), sizeof(char));
+	char *result;
 
 	for (i = 0; i < length; i++) {
 		if (haystack[i] == '"')
@@ -31,6 +31,7 @@ char *replace_string(char *haystack, char *old_word, char *new_word)
 		}
 	}
 
+	result = (char *)calloc(1 + strlen(haystack) + number_of_appearances * (strlen(new_word) - strlen(old_word)), sizeof(char));
 	if (result == NULL)
 		return NULL;
 

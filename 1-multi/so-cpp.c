@@ -6,9 +6,9 @@ char *parse_value(THashTable *hash_table, char *value, int *changed)
 {
 	char *copy_value = (char *)calloc(strlen(value) + 1, sizeof(char));
 	char *new_value = NULL;
-	char *token;
-	char *token_value;
-	
+	char *token = NULL;
+	char *token_value = NULL;
+
 	if (copy_value == NULL)
 		return NULL;
 
@@ -41,7 +41,7 @@ char *parse_value(THashTable *hash_table, char *value, int *changed)
 int parse_arguments(THashTable *hash_table, FILE **input_file, FILE **output_file, int argc, char *argv[], Vector *include_directories)
 {
 	int i, rc;
-	char *symbol_mapping, *key, *value, *include_directory;
+	char *symbol_mapping = NULL, *key = NULL, *value = NULL, *include_directory = NULL;
 
 	for (i = 1; i < argc; i++) {
 		if (!strncmp(argv[i], D_ARG, strlen(D_ARG))) {
@@ -135,8 +135,8 @@ FILE *get_include_file(char *buffer, Vector *include_directories)
 {
 	unsigned int i;
 	char *file_name = strchr(buffer, ' ');
-	char *file_path;
-	FILE *include_file;
+	char *file_path = NULL;
+	FILE *include_file = NULL;
 
 	file_name += 2;
 	memset(file_name + strlen(file_name) - 2, 0, 2);
@@ -177,7 +177,7 @@ int parse_define(char *buffer, char **multi_line_define_key, char **multi_line_d
 	char *key_value_mapping = strchr(buffer, ' ');
 	int rc;
 	int changed = 1;
-	char *key_value_mapping_copy, *key, *value;
+	char *key_value_mapping_copy = NULL, *key = NULL, *value = NULL;
 
 	key_value_mapping++;
 	key_value_mapping_copy = (char *)calloc(strlen(key_value_mapping), sizeof(char));
@@ -233,9 +233,9 @@ int preprocess_line(char *buffer, THashTable *hash_table, FILE *output_file)
 {
 	char *replace_buffer = NULL;
 	char buffer_copy[BUFSIZE];
-	char *token;
-	char *hash_table_value;
-	char *new_replace_buffer;
+	char *token = NULL;
+	char *hash_table_value = NULL;
+	char *new_replace_buffer = NULL;
 
 	memset(buffer_copy, 0, BUFSIZE);
 	memcpy(buffer_copy, buffer, BUFSIZE);
@@ -270,8 +270,8 @@ int preprocess_line(char *buffer, THashTable *hash_table, FILE *output_file)
 
 int parse_if_elif_line(char *buffer, int *stop_parsing_if_branch, int *parse_if_branch, int *inside_if_branch, THashTable *hash_table)
 {
-	char *cond;
-	char *cond_value;
+	char *cond = NULL;
+	char *cond_value = NULL;
 	int eval_cond;
 
 	if (!*stop_parsing_if_branch && !*parse_if_branch) {
@@ -299,9 +299,9 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 	int inside_if_branch = 0, parse_if_branch = 0, stop_parsing_if_branch = 0;
 	char *multi_line_define_key = NULL;
 	char *multi_line_define_value = NULL;
-	char *symbol;
-	char *symbol_value;
-	char *undefined_key;
+	char *symbol = NULL;
+	char *symbol_value = NULL;
+	char *undefined_key = NULL;
 
 	memset(buffer, 0, BUFSIZE);
 	while (fgets(buffer, BUFSIZE, input_file)) {
@@ -376,8 +376,8 @@ int preprocess_code(FILE *input_file, FILE *output_file, THashTable *hash_table,
 
 int main(int argc, char *argv[])
 {
-	THashTable *hash_table;
-	Vector *include_directories;
+	THashTable *hash_table = NULL;
+	Vector *include_directories = NULL;
 	char buffer[BUFSIZE];
 	int rc;
 	FILE *input_file = stdin;
