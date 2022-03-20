@@ -18,6 +18,7 @@ Vector *create_vector(int capacity)
 	return vector;
 }
 
+// double the maximum capacity of the vector
 int resize(Vector *v)
 {
 	char **values = realloc(v->values, 2 * v->capacity * sizeof(char *));
@@ -35,7 +36,8 @@ int append(Vector *v, char *value)
 	if (v->capacity == v->length)
 		if (resize(v) == 12)
 			return 12;
-	v->values[v->length++] = (char *)calloc(strlen(value) + 1, sizeof(char));
+	v->values[v->length++] = (char *)
+		calloc(strlen(value) + 1, sizeof(char));
 	if (v->values[v->length - 1] == NULL)
 		return 12;
 	memcpy(v->values[v->length - 1], value, strlen(value));

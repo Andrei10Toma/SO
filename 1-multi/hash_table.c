@@ -84,6 +84,7 @@ void free_entries(unsigned int size, TEntry *entries)
 	}
 }
 
+// if the hash_table will be half we double its capacity
 int realloc_hash_table(THashTable *hash_table)
 {
 	TEntry *old_entries;
@@ -103,7 +104,9 @@ int realloc_hash_table(THashTable *hash_table)
 
 	for (i = 0; i < hash_table->size; i++) {
 		if (hash_table->entries[i].key != NULL) {
-			old_entries[i].key = (char *)calloc(strlen(hash_table->entries[i].key) + 1, sizeof(char));
+			old_entries[i].key = (char *)
+				calloc(strlen(hash_table->entries[i].key) + 1,
+				sizeof(char));
 			if (old_entries[i].key == NULL) {
 				free_entries(hash_table->size, old_entries);
 				free_entries(2 * hash_table->size, new_entries);
@@ -111,12 +114,16 @@ int realloc_hash_table(THashTable *hash_table)
 				free(new_entries);
 				return 12;
 			}
-			memcpy(old_entries[i].key, hash_table->entries[i].key, strlen(hash_table->entries[i].key));
+			memcpy(old_entries[i].key,
+				hash_table->entries[i].key,
+				strlen(hash_table->entries[i].key));
 			free(hash_table->entries[i].key);
 		}
 
 		if (hash_table->entries[i].value != NULL) {
-			old_entries[i].value = (char *)calloc(strlen(hash_table->entries[i].value) + 1, sizeof(char));
+			old_entries[i].value = (char *)
+				calloc(strlen(hash_table->entries[i].value) + 1,
+				sizeof(char));
 			if (old_entries[i].value == NULL) {
 				free_entries(hash_table->size, old_entries);
 				free_entries(2 * hash_table->size, new_entries);
@@ -124,7 +131,9 @@ int realloc_hash_table(THashTable *hash_table)
 				free(new_entries);
 				return 12;
 			}
-			memcpy(old_entries[i].value, hash_table->entries[i].value, strlen(hash_table->entries[i].value));
+			memcpy(old_entries[i].value,
+				hash_table->entries[i].value,
+				strlen(hash_table->entries[i].value));
 			free(hash_table->entries[i].value);
 		}
 	}
@@ -136,7 +145,10 @@ int realloc_hash_table(THashTable *hash_table)
 	hash_table->entries = new_entries;
 	for (i = 0; i < old_size; i++) {
 		if (old_entries[i].key != NULL) {
-			int ret_value = put_entry_in_hash_table(hash_table, old_entries[i].key, old_entries[i].value);
+			int ret_value =
+			put_entry_in_hash_table(hash_table,
+				old_entries[i].key,
+				old_entries[i].value);
 
 			if (ret_value == -1)
 				return -1;

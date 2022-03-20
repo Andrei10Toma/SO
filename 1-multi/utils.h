@@ -16,8 +16,11 @@
 #define D_ARG "-D"
 #define I_ARG "-I"
 
+// remove the extra white spaces from the given string
 void remove_extra_spaces(char *str);
 
+// replace the appearance of the old_word in haystack with new_word
 char *replace_string(char *haystack, char *old_word, char *new_word);
 
+// similar to strdup
 char *my_strdup(char *s);

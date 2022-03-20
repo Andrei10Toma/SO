@@ -21,13 +21,13 @@ typedef struct hash_table {
 // allocate memory for the hash table structure
 THashTable *create_hash_table(void);
 
-// get the value from the hash table based on the given key
+// get the value mapped for the given key
 char *get(THashTable *hash_table, char *key);
 
-// put the value in the hash map
+// put the key-value entry in the hashmap
 int put(THashTable *hash_table, char *key, char *value);
 
-// free memory for the hash_table
+// free the allocated memory for the hash_table
 void destroy_hash_table(THashTable *hash_table);
 
 // remove the key from the hash table

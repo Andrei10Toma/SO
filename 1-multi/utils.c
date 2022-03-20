@@ -22,23 +22,29 @@ char *replace_string(char *haystack, char *old_word, char *new_word)
 	for (i = 0; i < length; i++) {
 		if (haystack[i] == '"')
 			between_quotes = between_quotes == 1 ? 0 : 1;
-		// the word that we want to replace is at the beginning of the text
-		// so a word is found
-		if (strstr(haystack + i, old_word) == haystack + i && !between_quotes) {
+		// the word that we want to replace is at the
+		// beginning of the text
+		if (strstr(haystack + i, old_word) == haystack + i &&
+			!between_quotes) {
 			number_of_appearances++;
 			// jump the found word
 			i += strlen(old_word);
 		}
 	}
 
-	result = (char *)calloc(1 + strlen(haystack) + number_of_appearances * (strlen(new_word) - strlen(old_word)), sizeof(char));
+	result = (char *)calloc(
+		1 + strlen(haystack) +
+		number_of_appearances * (strlen(new_word)
+		- strlen(old_word)),
+		sizeof(char));
 	if (result == NULL)
 		return NULL;
 
 	i = 0;
 	between_quotes = 0;
 	while (*haystack) {
-		// if the new word is found in the haystack replace it
+		// if the old_word is found in the haystack take and
+		// it is not between quotes replace it with the new word
 		if (*haystack == '"')
 			between_quotes = between_quotes == 1 ? 0 : 1;
 		if (strstr(haystack, old_word) == haystack && !between_quotes) {
