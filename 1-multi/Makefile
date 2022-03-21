@@ -1,5 +1,5 @@
 CC = cl
-CFLAGS = /MD
+CFLAGS = /MD /W3 /D_CRT_SECURE_NO_DEPRECATE
 
 build: so-cpp.exe
 
