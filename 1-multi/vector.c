@@ -19,7 +19,7 @@ Vector *create_vector(int capacity)
 }
 
 // double the maximum capacity of the vector
-int resize(Vector *v)
+static int resize(Vector *v)
 {
 	char **values = realloc(v->values, 2 * v->capacity * sizeof(char *));
 

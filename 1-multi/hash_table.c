@@ -20,7 +20,7 @@ THashTable *create_hash_table(void)
 }
 
 // FNV-1a hash algorithm
-unsigned long long hash(char *key)
+static unsigned long long hash(char *key)
 {
 	unsigned long long hash = FNV_OFFSET;
 	unsigned int i, length = strlen(key);
@@ -44,7 +44,8 @@ char *get(THashTable *hash_table, char *key)
 	return NULL;
 }
 
-int put_entry_in_hash_table(THashTable *hash_table, char *key, char *value)
+static int put_entry_in_hash_table(THashTable *hash_table, char *key,
+	char *value)
 {
 	unsigned long long key_hash = hash(key);
 	unsigned int index = key_hash % (hash_table->size - 1);
@@ -70,7 +71,7 @@ int put_entry_in_hash_table(THashTable *hash_table, char *key, char *value)
 	return 1;
 }
 
-void free_entries(unsigned int size, TEntry *entries)
+static void free_entries(unsigned int size, TEntry *entries)
 {
 	unsigned int i;
 
@@ -85,7 +86,7 @@ void free_entries(unsigned int size, TEntry *entries)
 }
 
 // if the hash_table will be half we double its capacity
-int realloc_hash_table(THashTable *hash_table)
+static int realloc_hash_table(THashTable *hash_table)
 {
 	TEntry *old_entries;
 	TEntry *new_entries;
