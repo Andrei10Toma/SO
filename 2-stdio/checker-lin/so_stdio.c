@@ -32,9 +32,7 @@ struct _so_file {
 	int write_error; /* set if an error occurs while writing */
 };
 
-/*
-Allocate memory for a file structure, open the file and set the correct flags
-*/
+// Allocate memory for a file structure, open the file and set the correct flags
 SO_FILE *so_fopen(const char *pathname, const char *mode)
 {
 	int fd;
@@ -74,9 +72,7 @@ SO_FILE *so_fopen(const char *pathname, const char *mode)
 	return file;
 }
 
-/*
-Free the memory used for the structure and close the opened file descriptor
-*/
+// Free the memory used for the structure and close the opened file descriptor
 int so_fclose(SO_FILE *stream)
 {
 	int rc = 0;
@@ -95,9 +91,7 @@ int so_fclose(SO_FILE *stream)
 	return rc;
 }
 
-/*
-Returns the file descriptor of the file
-*/
+// Returns the file descriptor of the file
 int so_fileno(SO_FILE *stream)
 {
 	if (stream == NULL)
@@ -105,9 +99,7 @@ int so_fileno(SO_FILE *stream)
 	return stream->fd;
 }
 
-/*
-Move the cursor of the file
-*/
+// Move the cursor of the file
 int so_fseek(SO_FILE *stream, long offset, int whence)
 {
 	int rc;
@@ -120,7 +112,7 @@ int so_fseek(SO_FILE *stream, long offset, int whence)
 		stream->read_buffer_length = 0;
 		stream->read_buffer_offset = 0;
 	}
-	
+
 	if (stream->last_operation == WRITE)
 		so_fflush(stream);
 
@@ -131,9 +123,7 @@ int so_fseek(SO_FILE *stream, long offset, int whence)
 	return 0;
 }
 
-/*
-Return the current cursor
-*/
+// Return the current cursor
 long so_ftell(SO_FILE *stream)
 {
 	if (stream == NULL)
@@ -141,9 +131,7 @@ long so_ftell(SO_FILE *stream)
 	return stream->cursor;
 }
 
-/*
-Fills the read buffer used for buffering
-*/
+// Fills the read buffer used for buffering
 static int fill_read_buffer(SO_FILE *stream)
 {
 	ssize_t bytes_read;
@@ -164,9 +152,9 @@ static int fill_read_buffer(SO_FILE *stream)
 }
 
 /*
-Write the whole information when the write buffer is full or so_fflush
-is called
-*/
+ * Write the whole information when the write buffer is full or so_fflush
+ * is called
+ */
 static int empty_write_buffer(SO_FILE *stream)
 {
 	int rc;
@@ -184,9 +172,7 @@ static int empty_write_buffer(SO_FILE *stream)
 	return 0;
 }
 
-/*
-Get the information from the read buffer and save it in ptr
-*/
+// Get the information from the read buffer and save it in ptr
 size_t so_fread(void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 {
 	int rc;
@@ -206,9 +192,7 @@ size_t so_fread(void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 	return nmemb;
 }
 
-/*
-Save the information in the write buffer and write it in the file later
-*/
+// Save the information in the write buffer and write it in the file later
 size_t so_fwrite(const void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 {
 	char *buf = (char *) ptr;
@@ -226,9 +210,7 @@ size_t so_fwrite(const void *ptr, size_t size, size_t nmemb, SO_FILE *stream)
 	return nmemb;
 }
 
-/*
-Fill the read buffer if it is full and return the read character
-*/
+// Fill the read buffer if it is full and return the read character
 int so_fgetc(SO_FILE *stream)
 {
 	int rc;
@@ -257,9 +239,9 @@ int so_fgetc(SO_FILE *stream)
 }
 
 /*
-Put the character in the write buffer and write it later when the buffer is
-full or so_fflush is called
-*/
+ * Put the character in the write buffer and write it later when the buffer is
+ * full or so_fflush is called
+ */
 int so_fputc(int c, SO_FILE *stream)
 {
 	int rc;
