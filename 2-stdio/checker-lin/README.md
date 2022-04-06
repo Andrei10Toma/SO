@@ -12,8 +12,6 @@ efectuată pe fişier (citire sau scriere)
 - eof - determină dacă s-a ajuns la finalul fişierului
 - child_pid - folosit pentru procesele deschise cu `so_popen` pentru a ştii
 cand se dă `so_pclose` ce proces să fie aşteptat
-- read_write_append_flags - sunt setate flagurile în funcţie de modul în care
-fişierul este deschis
 - read_buffer - folosit la buffering-ul pentru citire
 - read_buffer_length - lungimea buffer-ului de citire
 - read_buffer_offset - poziţia actuala in buffer-ul de citire
@@ -51,3 +49,8 @@ fie aşteptată terminarea execuţiei procesului copil.
 
 ## Cum se compilează şi cum se rulează?
 Linux - make
+
+## Bibliografie
+- https://ocw.cs.pub.ro/courses/so/laboratoare/laborator-01
+- https://ocw.cs.pub.ro/courses/so/laboratoare/laborator-02
+- https://ocw.cs.pub.ro/courses/so/laboratoare/laborator-03

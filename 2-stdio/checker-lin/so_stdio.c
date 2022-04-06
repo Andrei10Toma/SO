@@ -21,7 +21,6 @@ struct _so_file {
 	int eof; /*set if the end of file is reached */
 	pid_t child_pid; /* child process id in case of popen */
 
-	unsigned char read_write_append_flags; /* O_{} flags */
 	char read_buffer[BUFSIZE]; /* used for read buffering */
 	unsigned int read_buffer_length; /* read buffer length */
 	unsigned int read_buffer_offset; /* current position in the read buffer */
@@ -40,25 +39,19 @@ SO_FILE *so_fopen(const char *pathname, const char *mode)
 
 	if (file == NULL)
 		return NULL;
-	if (!strcmp(mode, "r")) {
+	if (!strcmp(mode, "r"))
 		fd = open(pathname, O_RDONLY);
-		file->read_write_append_flags |= O_RDONLY;
-	} else if (!strcmp(mode, "r+")) {
+	else if (!strcmp(mode, "r+"))
 		fd = open(pathname, O_RDWR);
-		file->read_write_append_flags |= O_RDWR;
-	} else if (!strcmp(mode, "w")) {
+	else if (!strcmp(mode, "w"))
 		fd = open(pathname, O_WRONLY | O_CREAT | O_TRUNC);
-		file->read_write_append_flags |= O_WRONLY | O_CREAT | O_TRUNC;
-	} else if (!strcmp(mode, "w+")) {
+	else if (!strcmp(mode, "w+"))
 		fd = open(pathname, O_RDWR | O_CREAT | O_TRUNC);
-		file->read_write_append_flags |= O_RDWR | O_CREAT | O_TRUNC;
-	} else if (!strcmp(mode, "a")) {
+	else if (!strcmp(mode, "a"))
 		fd = open(pathname, O_WRONLY | O_CREAT | O_APPEND);
-		file->read_write_append_flags |= O_WRONLY | O_CREAT | O_APPEND;
-	} else if (!strcmp(mode, "a+")) {
+	else if (!strcmp(mode, "a+"))
 		fd = open(pathname, O_RDWR | O_CREAT | O_APPEND);
-		file->read_write_append_flags |= O_RDWR | O_CREAT | O_APPEND;
-	} else {
+	else {
 		free(file);
 		return NULL;
 	}
@@ -216,9 +209,6 @@ int so_fgetc(SO_FILE *stream)
 	int rc;
 	unsigned char character;
 
-	if (stream == NULL || (((stream->read_write_append_flags & O_RDONLY) != O_RDONLY) && ((stream->read_write_append_flags & O_RDWR) != O_RDWR)))
-		return SO_EOF;
-
 	rc = so_feof(stream);
 	if (rc == SO_EOF)
 		return SO_EOF;
@@ -245,9 +235,6 @@ int so_fgetc(SO_FILE *stream)
 int so_fputc(int c, SO_FILE *stream)
 {
 	int rc;
-
-	if (stream == NULL || (((stream->read_write_append_flags & O_WRONLY) != O_WRONLY) && ((stream->read_write_append_flags & O_RDWR) != O_RDWR)))
-		return SO_EOF;
 
 	stream->last_operation = WRITE;
 
@@ -332,12 +319,10 @@ SO_FILE *so_popen(const char *command, const char *type)
 		if (!strcmp(type, "r")) {
 			close(pipe_fds[1]);
 			file->fd = pipe_fds[0];
-			file->read_write_append_flags |= O_RDONLY;
 			memset(file->read_buffer, 0, BUFSIZE);
 		} else if (!strcmp(type, "w")) {
 			close(pipe_fds[0]);
 			file->fd = pipe_fds[1];
-			file->read_write_append_flags |= O_WRONLY;
 			memset(file->write_buffer, 0, BUFSIZE);
 		}
 		file->child_pid = pid;
