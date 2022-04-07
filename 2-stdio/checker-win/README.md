@@ -10,8 +10,6 @@ următoarele câmpuri:
 valorile `READ` şi `WRITE`; în acest câmp voi reţine ultima operaţie
 efectuată pe fişier (citire sau scriere)
 - eof - determină dacă s-a ajuns la finalul fişierului
-- child_pid - folosit pentru procesele deschise cu `so_popen` pentru a ştii
-cand se dă `so_pclose` ce proces să fie aşteptat
 - read_buffer - folosit la buffering-ul pentru citire
 - read_buffer_length - lungimea buffer-ului de citire
 - read_buffer_offset - poziţia actuala in buffer-ul de citire
