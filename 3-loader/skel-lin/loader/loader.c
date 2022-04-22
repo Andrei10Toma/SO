@@ -59,7 +59,7 @@ static void segv_handler(int signum, siginfo_t *info, void *context)
 
 	// map the address where the page fault occured and load the information
 	// from the ELF executable
-	rc = mmap((char*)(found_segment->vaddr + PAGE_SIZE * page_index),
+	rc = mmap((char *)(found_segment->vaddr + PAGE_SIZE * page_index),
 		PAGE_SIZE,
 		PROT_WRITE,
 		MAP_PRIVATE | MAP_FIXED,
@@ -102,7 +102,8 @@ int so_init_loader(void)
 	return -1;
 }
 
-void so_free_memory() {
+static void so_free_memory(void)
+{
 	// free the data vector
 	int rc;
 
