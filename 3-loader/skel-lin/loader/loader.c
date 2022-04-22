@@ -109,6 +109,7 @@ static void so_free_memory(void)
 
 	for (int i = 0; i < exec->segments_no; i++) {
 		so_seg_t *segment = &exec->segments[i];
+
 		for (char *addr = (char *)segment->vaddr; addr <= (char *)(segment->vaddr + segment->mem_size); addr += PAGE_SIZE) {
 			rc = munmap(addr, PAGE_SIZE);
 			DIE(rc == -1, "umnap error");
