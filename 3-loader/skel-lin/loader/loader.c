@@ -119,6 +119,7 @@ static void so_free_memory(void)
 	}
 	free(exec->segments);
 	free(exec);
+	close(fd);
 }
 
 int so_execute(char *path, char *argv[])
