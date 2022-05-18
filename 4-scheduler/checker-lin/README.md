@@ -59,7 +59,9 @@ Am intampinat dificultati cu sincronizarea (multe deadlock-uri).
 La apelul functiei `so_exec` doar va trece timp pe procesor. Cuanta de timp
 ramasa pentru thread este decrementata si cand se va ajunge la 0 threadul
 este preemptat si threadul cu cea mai mare prioritate din `READY` va fi pus
-ca noul running thread. Cand noul thread este pus sa ruleze se va face `post` semaforul sau de running si pe semaforul threadului care a fost preemptat se va face `wait`.
+ca noul running thread. Cand noul thread este pus sa ruleze se va face `post` 
+semaforul sau de running si pe semaforul threadului care a fost preemptat se
+va face `wait`.
 
 ***Evenimete IO***
 Pentru evenimente IO se va folosi lista de liste `waiting_threads_queue`.
